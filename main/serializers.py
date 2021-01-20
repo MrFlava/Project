@@ -1,4 +1,5 @@
 from rest_framework import serializers
+
 from main.models import Portfolio, Image, Comment
 
 
@@ -6,20 +7,21 @@ class PortfolioSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Portfolio
-        fields = '__all__'
+        exclude = ['profile']
 
 
 class ImageSerializer(serializers.ModelSerializer):
+    portfolio_name = serializers.CharField(source='portfolio.name', read_only=True)
 
     class Meta:
         model = Image
-        fields = '__all__'
+        fields = ['id', 'name', 'description', 'image', 'created_date', 'portfolio', 'portfolio_name']
 
 
 class CommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = '__all__'
+        exclude = ['profile', 'image']
 
 

@@ -25,7 +25,7 @@ urlpatterns = [
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.authtoken')),
     path('api/main/', include('main.urls')),
-    path("profile/<str:username>/delete", views.DeleteOwnProfileView.as_view(), name="delete-own-profile"),
+    path('profile/<str:username>/delete', views.DeleteOwnProfileView.as_view(), name='delete-own-profile'),
 
 ]
 

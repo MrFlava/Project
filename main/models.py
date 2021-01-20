@@ -37,4 +37,4 @@ class Comment(models.Model):
     objects = models.Manager()
 
     def __str__(self):
-        return f"Comment by ({self.profile.name})"
+        return f"Comment by ({self.profile})"

@@ -1,6 +1,7 @@
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.generics import CreateAPIView, ListAPIView, UpdateAPIView, DestroyAPIView
+from rest_framework.viewsets import ViewSet
 from djoser.serializers import UserSerializer, User
 
 from .serializers import PortfolioSerializer, ImageSerializer, CommentSerializer
@@ -27,7 +28,7 @@ class PortfolioCreateView(CreateAPIView):
 
     def perform_create(self, serializer):
         user = self.request.user
-        serializer.save(profile=user)
+        return serializer.save(profile=user)
 
 
 class PortfolioListView(ListAPIView):
@@ -60,7 +61,8 @@ class PortfolioDeleteView(DestroyAPIView):
 class ImageListView(ListAPIView):
 
     def get_queryset(self):
-        return Image.objects.order_by('created_date')
+        images = Image.objects.order_by('created_date')
+        return images
 
     serializer_class = ImageSerializer
     permission_classes = [IsAuthenticated]
@@ -119,4 +121,4 @@ class ImageCreateCommentView(CreateAPIView):
 
     def perform_create(self, serializer):
         user = self.request.user
-        serializer.save(profile=user)
+        serializer.save(profile=user, image_id=self.kwargs.get('image_id'))
