@@ -1,10 +1,22 @@
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.generics import CreateAPIView, ListAPIView, UpdateAPIView, DestroyAPIView, RetrieveAPIView
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.generics import CreateAPIView, ListAPIView, UpdateAPIView, DestroyAPIView
+from djoser.serializers import UserSerializer, User
 
-from django.shortcuts import render
 from .serializers import PortfolioSerializer, ImageSerializer, CommentSerializer
 from .models import Portfolio, Image, Comment
 # Create your views here.
+
+
+class DeleteOwnProfileView(DestroyAPIView):
+    serializer_class = UserSerializer
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    lookup_field = "username"
+
+    def get_queryset(self):
+        user = self.request.user
+        return User.objects.filter(username=user.username)
 
 
 class PortfolioCreateView(CreateAPIView):
