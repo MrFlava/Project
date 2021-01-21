@@ -1,7 +1,7 @@
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.generics import CreateAPIView, ListAPIView, UpdateAPIView, DestroyAPIView
-from rest_framework.viewsets import ViewSet
+from rest_framework.filters import SearchFilter, OrderingFilter
 from djoser.serializers import UserSerializer, User
 
 from .serializers import PortfolioSerializer, ImageSerializer, CommentSerializer
@@ -32,12 +32,11 @@ class PortfolioCreateView(CreateAPIView):
 
 
 class PortfolioListView(ListAPIView):
+    serializer_class = PortfolioSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return Portfolio.objects.filter(profile=self.request.user)
-
-    serializer_class = PortfolioSerializer
-    permission_classes = [IsAuthenticated]
 
 
 class PortfolioUpdateView(UpdateAPIView):
@@ -59,17 +58,14 @@ class PortfolioDeleteView(DestroyAPIView):
 
 
 class ImageListView(ListAPIView):
-
-    def get_queryset(self):
-        images = Image.objects.order_by('created_date')
-        return images
-
+    queryset = Image.objects.all()
     serializer_class = ImageSerializer
     permission_classes = [IsAuthenticated]
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ['name', 'description', 'portfolio__name']
 
 
 class ImageCreateView(CreateAPIView):
-
     queryset = Image.objects.all()
     serializer_class = ImageSerializer
     permission_classes = [IsAuthenticated]
@@ -87,31 +83,10 @@ class ImageDeleteView(DestroyAPIView):
     permission_classes = [IsAuthenticated]
 
 
-class ImageGetNameView(ListAPIView):
+class ImageSearchView(ListAPIView):
     queryset = Image.objects.all()
     serializer_class = ImageSerializer
     permission_classes = [IsAuthenticated]
-
-    def get_queryset(self, *args, **kwargs):
-        return Image.objects.filter(name=self.kwargs.get("name"))
-
-
-class ImageGetDescriptionView(ListAPIView):
-    queryset = Image.objects.all()
-    serializer_class = ImageSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self, *args, **kwargs):
-        return Image.objects.filter(description=self.kwargs.get("desc"))
-
-
-class ImageGetPortfolioNameView(ListAPIView):
-    queryset = Image.objects.all()
-    serializer_class = ImageSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self, *args, **kwargs):
-        return Image.objects.filter(portfolio__name=self.kwargs.get("portfolio_name"))
 
 
 class ImageCreateCommentView(CreateAPIView):
