@@ -2,6 +2,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.generics import CreateAPIView, ListAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework.filters import SearchFilter, OrderingFilter
+from django.http import JsonResponse
 from djoser.serializers import UserSerializer, User
 
 from .serializers import PortfolioSerializer, ImageSerializer, CommentSerializer
@@ -13,7 +14,7 @@ class DeleteOwnProfileView(DestroyAPIView):
     serializer_class = UserSerializer
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
-    lookup_field = "username"
+    lookup_field = 'username'
 
     def get_queryset(self):
         user = self.request.user
@@ -83,12 +84,6 @@ class ImageDeleteView(DestroyAPIView):
     permission_classes = [IsAuthenticated]
 
 
-class ImageSearchView(ListAPIView):
-    queryset = Image.objects.all()
-    serializer_class = ImageSerializer
-    permission_classes = [IsAuthenticated]
-
-
 class ImageCreateCommentView(CreateAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
@@ -97,3 +92,33 @@ class ImageCreateCommentView(CreateAPIView):
     def perform_create(self, serializer):
         user = self.request.user
         serializer.save(profile=user, image_id=self.kwargs.get('image_id'))
+
+
+def custom400(request, exception):
+    return JsonResponse({
+        'status_code': 400,
+        'error': 'Bad Request. You sent a request that this server could not understand.'
+    })
+
+
+def custom401(request, exception):
+    return JsonResponse({
+        'status_code': 401,
+        'error': 'Authorization Required.'
+    })
+
+
+def custom403(request, exception):
+    return JsonResponse({
+        'status_code': 403,
+        'error': 'Forbidden.'
+    })
+
+
+def custom404(request, exception):
+    return JsonResponse({
+        'error': 'The resource was not found',
+        'status_code': 404
+    })
+
+
