@@ -23,5 +23,3 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         exclude = ['profile', 'image']
-
-

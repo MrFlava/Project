@@ -1,24 +1,11 @@
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.authentication import TokenAuthentication
 from rest_framework.generics import CreateAPIView, ListAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django.http import JsonResponse
-from djoser.serializers import UserSerializer, User
 
 from .serializers import PortfolioSerializer, ImageSerializer, CommentSerializer
 from .models import Portfolio, Image, Comment
 # Create your views here.
-
-
-class DeleteOwnProfileView(DestroyAPIView):
-    serializer_class = UserSerializer
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
-    lookup_field = 'username'
-
-    def get_queryset(self):
-        user = self.request.user
-        return User.objects.filter(username=user.username)
 
 
 class PortfolioCreateView(CreateAPIView):

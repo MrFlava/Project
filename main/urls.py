@@ -13,5 +13,4 @@ urlpatterns = [
     path("images/<int:pk>/update", views.ImageUpdateView.as_view(), name="update-image"),
     path("images/<int:pk>/delete", views.ImageDeleteView.as_view(), name="delete-image"),
     path("images/<int:image_id>/comments/create", views.ImageCreateCommentView.as_view(), name="image-create-comment"),
-
 ]

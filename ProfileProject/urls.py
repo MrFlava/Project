@@ -18,14 +18,12 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-from main import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.authtoken')),
     path('api/main/', include('main.urls')),
-    path('profile/<str:username>/delete', views.DeleteOwnProfileView.as_view(), name='delete-own-profile'),
 
 ]
 
