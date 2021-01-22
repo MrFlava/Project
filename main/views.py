@@ -1,8 +1,6 @@
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import CreateAPIView, ListAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework.filters import SearchFilter, OrderingFilter
-from django.http import JsonResponse
-
 from .serializers import PortfolioSerializer, ImageSerializer, CommentSerializer
 from .models import Portfolio, Image, Comment
 # Create your views here.
@@ -79,33 +77,4 @@ class ImageCreateCommentView(CreateAPIView):
     def perform_create(self, serializer):
         user = self.request.user
         serializer.save(profile=user, image_id=self.kwargs.get('image_id'))
-
-
-def custom400(request, exception):
-    return JsonResponse({
-        'status_code': 400,
-        'error': 'Bad Request. You sent a request that this server could not understand.'
-    })
-
-
-def custom401(request, exception):
-    return JsonResponse({
-        'status_code': 401,
-        'error': 'Authorization Required.'
-    })
-
-
-def custom403(request, exception):
-    return JsonResponse({
-        'status_code': 403,
-        'error': 'Forbidden.'
-    })
-
-
-def custom404(request, exception):
-    return JsonResponse({
-        'error': 'The resource was not found',
-        'status_code': 404
-    })
-
 

@@ -1,6 +1,8 @@
-from django.db import models
 from datetime import datetime
+from django.db import models
 from django.contrib.auth import get_user_model
+from django.core.validators import validate_image_file_extension
+
 # Create your models here.
 
 
@@ -18,7 +20,7 @@ class Portfolio(models.Model):
 class Image(models.Model):
     name = models.CharField(max_length=250)
     description = models.TextField()
-    image = models.ImageField(upload_to="images")
+    image = models.ImageField(upload_to="images", validators=[validate_image_file_extension])
     created_date = models.DateTimeField(default=datetime.now())
     portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE)
 
