@@ -7,7 +7,6 @@ from .models import Portfolio, Image, Comment
 
 
 class PortfolioCreateView(CreateAPIView):
-
     queryset = Portfolio.objects.all()
     serializer_class = PortfolioSerializer
     permission_classes = [IsAuthenticated]
