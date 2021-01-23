@@ -36,7 +36,3 @@ class TestViews(AuthTestSetUp):
     def test_login(self):
         result = self.client.post(self.login_url, self.user_data)
         self.assertEqual(result.status_code, 200)
-
-    def test_logout(self):
-        result = self.client.logout(self.login_url, self.user_data)
-        self.assertEqual(result.status_code, 200)
